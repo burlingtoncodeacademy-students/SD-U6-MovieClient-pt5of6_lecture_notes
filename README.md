@@ -6,9 +6,9 @@ There are two different branches associated with this lesson.
   - This branch includes all the added notes for you to review and compare with your own code-along.
 
 ### Topics Covered
-- Movie Index
-- Movie Create
-- Using environment variables
+- MovieTable
+  - GET
+- DELETE
 
 ### What Should Already Be Understood
 - Creating a React Application

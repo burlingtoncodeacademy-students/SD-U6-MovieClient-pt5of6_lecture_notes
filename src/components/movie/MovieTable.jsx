@@ -1,7 +1,36 @@
 import React from 'react'
-import { Table } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
+import { baseURL } from '../../environment'
 
-function MovieTable() {
+function MovieTable(props) {
+
+    // console.log(props)
+
+    async function deleteMovie(id) {
+        const url = `${baseURL}/movies/${id}`;
+
+        const myHeaders = new Headers();
+        myHeaders.append('Authorization', props.token);
+
+        let requestOptions = {
+            headers: myHeaders,
+            method: "DELETE"
+        }
+
+        try {
+            
+            let response = await fetch(url, requestOptions);
+            let data = await response.json();
+
+            if(data) {
+                props.fetchMovies();
+            }
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
     return (
         <>
         <h1>List of Movies</h1>
@@ -23,51 +52,30 @@ function MovieTable() {
                     <th>
                         Year Released
                     </th>
+                    <th>
+                        Edit / Delete
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">
-                        1
-                    </th>
-                    <td>
-                        Mark
-                    </td>
-                    <td>
-                        Otto
-                    </td>
-                    <td>
-                        @mdo
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        2
-                    </th>
-                    <td>
-                        Jacob
-                    </td>
-                    <td>
-                        Thornton
-                    </td>
-                    <td>
-                        @fat
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        3
-                    </th>
-                    <td>
-                        Larry
-                    </td>
-                    <td>
-                        the Bird
-                    </td>
-                    <td>
-                        @twitter
-                    </td>
-                </tr>
+                {
+                    props.movies.map(movie => (
+                        <tr key={movie._id}>
+                            <th scope ="row">{movie.title}</th>
+                            <td>{movie.genre}</td>
+                            <td>{movie.rating}</td>
+                            <td>{movie.length} mins</td>
+                            <td>{movie.releaseYear}</td>
+                            <td>
+                                <Button 
+                                    onClick={() => deleteMovie(movie._id)}
+                                    color="danger"
+                                >Delete</Button>
+                            </td>
+                        </tr>
+                    ))
+                }
+                
             </tbody>
         </Table>
         </>
